@@ -9,6 +9,7 @@ import android.content.pm.PackageManager
 import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.PowerManager
@@ -37,6 +38,7 @@ import com.voicecommand.partner.data.Prefs
 import com.voicecommand.partner.data.WakePhrase
 import com.voicecommand.partner.data.WakePhraseStore
 import com.voicecommand.partner.engine.VoskModelHolder
+import com.voicecommand.partner.engine.VoskModelInstaller
 import com.voicecommand.partner.feedback.Speaker
 import com.voicecommand.partner.gate.Mfcc
 import com.voicecommand.partner.gate.VoiceGate
@@ -73,6 +75,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+    private val voskImportLauncher =
+        registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+            if (uri != null) installVoskModelFromUri(uri)
+        }
+
     private val permissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
             refreshPermissions()
@@ -89,6 +96,12 @@ class MainActivity : AppCompatActivity() {
             WakeWordService.reload(this)
             toast(R.string.toast_service_reloading)
             refreshVoskStatus()
+        }
+        findViewById<View>(R.id.btnDownloadVosk).setOnClickListener { downloadVoskModel() }
+        findViewById<View>(R.id.btnImportVosk).setOnClickListener {
+            voskImportLauncher.launch(
+                arrayOf("application/zip", "application/x-zip-compressed", "application/octet-stream")
+            )
         }
         findViewById<View>(R.id.btnAddPhrase).setOnClickListener { showAddPhraseDialog() }
         findViewById<View>(R.id.btnAddCommand).setOnClickListener { showAddCommandDialog() }
@@ -214,6 +227,58 @@ class MainActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.textVoskStatus).text =
             if (path != null) getString(R.string.vosk_detected_fmt, path)
             else getString(R.string.vosk_not_detected)
+    }
+
+    private fun downloadVoskModel() {
+        runVoskInstall(
+            initialTitle = getString(R.string.vosk_downloading_fmt, 0),
+            worker = { onProgress -> VoskModelInstaller.downloadAndInstall(this, onProgress) },
+            progressText = { percent -> getString(R.string.vosk_downloading_fmt, percent) }
+        )
+    }
+
+    private fun installVoskModelFromUri(uri: Uri) {
+        runVoskInstall(
+            initialTitle = getString(R.string.vosk_installing),
+            worker = { _ -> VoskModelInstaller.installFromUri(this, uri) },
+            progressText = { getString(R.string.vosk_installing) }
+        )
+    }
+
+    private fun runVoskInstall(
+        initialTitle: String,
+        worker: ((Int) -> Unit) -> Boolean,
+        progressText: (Int) -> String
+    ) {
+        val progressBar = ProgressBar(this).apply {
+            isIndeterminate = false
+            max = 100
+            progress = 0
+        }
+        val dialog = AlertDialog.Builder(this)
+            .setTitle(initialTitle)
+            .setView(progressBar)
+            .setCancelable(true)
+            .setNegativeButton(R.string.cancel, null)
+            .show()
+        lifecycleScope.launch {
+            val ok = withContext(Dispatchers.IO) {
+                worker { percent ->
+                    runOnUiThread {
+                        progressBar.progress = percent
+                        dialog.setTitle(progressText(percent))
+                    }
+                }
+            }
+            dialog.dismiss()
+            if (ok) {
+                toast(R.string.vosk_installed)
+                refreshVoskStatus()
+                WakeWordService.reload(this@MainActivity)
+            } else {
+                toast(R.string.vosk_install_failed)
+            }
+        }
     }
 
     private fun loadEngineFields() {

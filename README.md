@@ -49,14 +49,11 @@ on/off, all active phrases are detected simultaneously, and everything persists 
    (`Build → Build APKs`) and `adb install app-debug.apk`.
 
 ### 2. Vosk model (enables out-of-the-box wake + offline commands)
-1. Download **`vosk-model-small-en-us-0.15.zip`** (~40 MB) from
-   <https://alphacephei.com/vosk/models> and unzip it.
-2. Copy the folder to the phone so one of these paths exists (pick one):
-   - `/sdcard/Download/vosk-model-small-en-us-0.15/` (adb push or USB file transfer)
-   - `/sdcard/vosk-model/`
-   - Android/data/com.voicecommand.partner/files/vosk-model/
-3. The app auto-detects it and shows the path under *Wake-word engines*.
-   You can also type an explicit path there.
+On the phone, in the app: *Wake-word engines → **Download Vosk model (~40 MB)*** — one tap over
+Wi-Fi, downloaded from <https://alphacephei.com/vosk/models> and extracted automatically.
+Offline alternative: *Import model (.zip)* and pick `vosk-model-small-en-us-0.15.zip` with the
+file picker. The card then shows the installed model path. (Manual copy also works: put the
+extracted folder at `Android/data/com.voicecommand.partner/files/vosk-model/` via USB.)
 
 ### 3. Porcupine (optional, recommended for battery + exotic phrases)
 1. Create a free account at <https://console.picovoice.ai> → copy your **AccessKey** →

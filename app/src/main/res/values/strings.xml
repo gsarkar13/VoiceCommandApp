@@ -23,6 +23,12 @@
     <string name="vosk_detected_fmt">Vosk model: %1$s</string>
     <string name="vosk_not_detected">Vosk model not found — offline wake/command fallback disabled</string>
     <string name="btn_reload">Reload engines</string>
+    <string name="btn_download_vosk">Download Vosk model (~40 MB)</string>
+    <string name="btn_import_vosk">Import model (.zip)</string>
+    <string name="vosk_downloading_fmt">Downloading Vosk model… %1$d%%</string>
+    <string name="vosk_installing">Installing Vosk model…</string>
+    <string name="vosk_installed">Vosk model installed</string>
+    <string name="vosk_install_failed">Vosk model install failed</string>
 
     <string name="section_phrases">Wake phrases</string>
     <string name="phrases_hint">Add any phrase (e.g. Hey Partner, Hey Jervis, Hello Sir, Dost). Import a Porcupine .ppn file per phrase for best battery and accuracy; otherwise the phrase is matched from Vosk live transcription.</string>
