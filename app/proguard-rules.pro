@@ -1,0 +1,2 @@
+-keep class org.vosk.** { *; }
+-keep class ai.picovoice.porcupine.** { *; }

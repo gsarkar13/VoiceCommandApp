@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Partner</string>
+    <string name="accessibility_label">Partner Voice Control (lock / screenshot)</string>
+    <string name="accessibility_description">Allows Partner to lock the screen, take screenshots and open system shades from a voice command. No screen content is read.</string>
+
+    <string name="notif_channel_name">Voice control</string>
+    <string name="notif_channel_desc">Ongoing microphone listening for wake phrases</string>
+    <string name="notif_listening_title">Partner is listening</string>
+    <string name="notif_listening_hint">Say a wake phrase, then a command.</string>
+    <string name="notif_action_stop">Stop</string>
+    <string name="notif_boot_title">Restart voice control</string>
+    <string name="notif_boot_text">Tap to resume Partner listening after reboot.</string>
+
+    <string name="status_stopped">Stopped</string>
+    <string name="status_running">Running</string>
+    <string name="btn_start">Start listening</string>
+    <string name="btn_stop">Stop listening</string>
+
+    <string name="section_engine">Wake-word engines</string>
+    <string name="access_key_hint">Picovoice AccessKey (free console account, optional)</string>
+    <string name="vosk_path_hint">Vosk model folder (blank = auto-detect)</string>
+    <string name="vosk_detected_fmt">Vosk model: %1$s</string>
+    <string name="vosk_not_detected">Vosk model not found — offline wake/command fallback disabled</string>
+    <string name="btn_reload">Reload engines</string>
+
+    <string name="section_phrases">Wake phrases</string>
+    <string name="phrases_hint">Add any phrase (e.g. Hey Partner, Hey Jervis, Hello Sir, Dost). Import a Porcupine .ppn file per phrase for best battery and accuracy; otherwise the phrase is matched from Vosk live transcription.</string>
+    <string name="btn_add_phrase">Add wake phrase</string>
+    <string name="dialog_add_phrase_title">New wake phrase</string>
+    <string name="phrase_label_hint">e.g. Hey Partner</string>
+    <string name="phrase_variants_hint">Extra match texts, comma separated (optional)</string>
+    <string name="source_porcupine">Porcupine model</string>
+    <string name="source_porcupine_pending">No .ppn imported — Vosk text match</string>
+    <string name="source_vosk">Vosk text match</string>
+    <string name="btn_import_model">Import .ppn</string>
+
+    <string name="gate_section">Voice gate (optional — not security-grade)</string>
+    <string name="gate_switch">Require my voice for the enrolled phrase</string>
+    <string name="gate_status_none">No enrollment yet</string>
+    <string name="gate_status_fmt">Enrolled for “%1$s”</string>
+    <string name="btn_enroll">Enroll my voice (3 samples)</string>
+    <string name="btn_clear_gate">Clear enrollment</string>
+    <string name="gate_sensitivity_label">Match strictness</string>
+    <string name="gate_strict">Strict</string>
+    <string name="gate_balanced">Balanced</string>
+    <string name="gate_loose">Loose</string>
+    <string name="gate_prompt_fmt">Say “%1$s” — sample %2$d of 3</string>
+    <string name="gate_saved">Voice enrollment saved</string>
+    <string name="gate_failed_quiet">Too quiet, try again</string>
+    <string name="gate_pick_phrase">Pick the wake phrase to enroll</string>
+
+    <string name="section_commands">Custom commands</string>
+    <string name="commands_hint">Map your own phrases to actions. Custom phrases are matched before built-in commands.</string>
+    <string name="btn_add_command">Add command</string>
+    <string name="dialog_add_command_title">New command</string>
+    <string name="command_phrase_hint">e.g. goodnight</string>
+    <string name="command_action_label">Action</string>
+    <string name="command_arg_hint">Argument (contact / app / minutes / percent)</string>
+
+    <string name="section_permissions">Permissions and device setup</string>
+    <string name="perm_mic">Microphone</string>
+    <string name="perm_contacts">Contacts and calling</string>
+    <string name="perm_notif">Notifications (Android 13+)</string>
+    <string name="perm_accessibility">Accessibility service — lock, screenshot, home</string>
+    <string name="perm_admin">Device admin — lock fallback</string>
+    <string name="perm_dnd">Do-Not-Disturb access — silent mode</string>
+    <string name="perm_write">Write system settings — brightness</string>
+    <string name="perm_battery">Ignore battery optimizations</string>
+    <string name="perm_xiaomi">Xiaomi/HyperOS: enable Autostart and Battery “No restrictions”, then pin the app in Recents</string>
+    <string name="btn_grant">Grant</string>
+    <string name="btn_open">Open</string>
+    <string name="granted">Granted</string>
+    <string name="not_granted">Not granted</string>
+
+    <string name="section_reference">Command reference</string>
+    <string name="reference_text">“Hey Partner” (or any of your wake phrases), then:\n\n
+• Lock my phone / screen\n
+• Play / pause / resume / next song / previous song\n
+• Call [name] / Dial [name]\n
+• Open / launch [app name]\n
+• Flashlight on / off\n
+• Volume up / down / max / mute\n
+• Take a screenshot\n
+• Go home / Show recents / Open notifications / Quick settings\n
+• What time is it / What’s the date / Battery level\n
+• Set alarm for 7:30 AM / Timer for 5 minutes\n
+• Silent mode on / off (ringer)\n
+• Brightness 50 (percent)\n
+• Find my phone\n
+• Go to sleep (stop listening)\n
+• Help\n\n
+Plus your custom commands from the list above.</string>
+
+    <string name="ok">OK</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+    <string name="toast_no_mic">Microphone permission is required</string>
+    <string name="toast_keyword_imported">Keyword model imported</string>
+    <string name="toast_import_failed">Import failed</string>
+    <string name="toast_service_reloading">Reloading engines…</string>
+</resources>

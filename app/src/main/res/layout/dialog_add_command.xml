@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <EditText
+        android:id="@+id/editCommandPhrase"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/command_phrase_hint"
+        android:inputType="textCapSentences" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="@string/command_action_label"
+        android:textColor="@color/text_secondary" />
+
+    <Spinner
+        android:id="@+id/spinnerCommandAction"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        android:id="@+id/editCommandArg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="@string/command_arg_hint"
+        android:inputType="text"
+        android:visibility="gone" />
+</LinearLayout>
