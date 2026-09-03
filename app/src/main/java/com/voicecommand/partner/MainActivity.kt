@@ -20,6 +20,7 @@ import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
@@ -41,14 +42,18 @@ import com.voicecommand.partner.gate.Mfcc
 import com.voicecommand.partner.gate.VoiceGate
 import com.voicecommand.partner.service.VoiceCommandAccessibilityService
 import com.voicecommand.partner.service.WakeWordService
+import com.voicecommand.partner.update.UpdateManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 
 class MainActivity : AppCompatActivity() {
 
     private var pendingImportPhraseId: String? = null
+
+    private val updateCheckIntervalMs = 30L * 60 * 1000
 
     private val importLauncher =
         registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
@@ -124,6 +129,7 @@ class MainActivity : AppCompatActivity() {
                 )
             )
         }
+        findViewById<View>(R.id.btnCheckUpdate).setOnClickListener { checkForUpdate(true) }
 
         findViewById<MaterialSwitch>(R.id.switchGate).setOnCheckedChangeListener { _, checked ->
             Prefs.setGateEnabled(this, checked)
@@ -168,6 +174,7 @@ class MainActivity : AppCompatActivity() {
         if (Prefs.isEnabled(this) && !WakeWordService.isRunning && hasMicPermission()) {
             WakeWordService.start(this)
         }
+        checkForUpdate(false)
     }
 
     override fun onResume() {
@@ -187,6 +194,7 @@ class MainActivity : AppCompatActivity() {
         refreshGate()
         refreshCommands()
         refreshPermissions()
+        refreshUpdateStatus()
     }
 
     private fun refreshServiceStatus() {
@@ -445,6 +453,98 @@ class MainActivity : AppCompatActivity() {
         }
         return out
     }
+
+    private fun refreshUpdateStatus() {
+        findViewById<TextView>(R.id.textUpdateStatus).text =
+            getString(R.string.update_current_fmt, UpdateManager.currentVersion(this))
+    }
+
+    private fun checkForUpdate(force: Boolean) {
+        val now = System.currentTimeMillis()
+        if (!force && now - Prefs.lastUpdateCheck(this) < updateCheckIntervalMs) return
+        Prefs.setLastUpdateCheck(this, now)
+        val status = findViewById<TextView>(R.id.textUpdateStatus)
+        status.text = getString(R.string.update_checking)
+        lifecycleScope.launch {
+            val current = UpdateManager.currentVersion(this@MainActivity)
+            val info = withContext(Dispatchers.IO) { UpdateManager.fetchLatest() }
+            if (info == null) {
+                status.text = getString(R.string.update_check_failed)
+                if (force) {
+                    Toast.makeText(this@MainActivity, R.string.update_check_failed, Toast.LENGTH_SHORT).show()
+                }
+                return@launch
+            }
+            if (!UpdateManager.isNewer(info.tag, current)) {
+                status.text = getString(R.string.update_up_to_date_fmt, current)
+                if (force) {
+                    Toast.makeText(
+                        this@MainActivity,
+                        getString(R.string.update_up_to_date_fmt, current),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                return@launch
+            }
+            status.text = getString(R.string.update_available_fmt, versionDigits(info.tag), current)
+            showUpdateDialog(info)
+        }
+    }
+
+    private fun showUpdateDialog(info: UpdateManager.ReleaseInfo) {
+        val current = UpdateManager.currentVersion(this)
+        val message = buildString {
+            append(getString(R.string.update_available_fmt, versionDigits(info.tag), current))
+            append("\n")
+            append(getString(R.string.update_size_mb_fmt, maxOf(1, (info.apkSize / 1048576L).toInt())))
+            info.notes?.let { notes ->
+                append("\n\n")
+                append(notes.take(800))
+            }
+        }
+        AlertDialog.Builder(this)
+            .setTitle(info.title ?: info.tag)
+            .setMessage(message)
+            .setPositiveButton(R.string.update_download) { _, _ -> downloadAndInstall(info) }
+            .setNegativeButton(R.string.update_later, null)
+            .show()
+    }
+
+    private fun downloadAndInstall(info: UpdateManager.ReleaseInfo) {
+        val progressBar = ProgressBar(this).apply {
+            isIndeterminate = false
+            max = 100
+            progress = 0
+        }
+        val dialog = AlertDialog.Builder(this)
+            .setTitle(getString(R.string.update_downloading_fmt, 0))
+            .setView(progressBar)
+            .setCancelable(true)
+            .setNegativeButton(R.string.cancel, null)
+            .show()
+        lifecycleScope.launch {
+            val dest = File(cacheDir, "updates/partner-update.apk")
+            val ok = withContext(Dispatchers.IO) {
+                UpdateManager.downloadApk(info, dest) { percent ->
+                    runOnUiThread {
+                        progressBar.progress = percent
+                        dialog.setTitle(getString(R.string.update_downloading_fmt, percent))
+                    }
+                }
+            }
+            dialog.dismiss()
+            if (!ok) {
+                dest.delete()
+                Toast.makeText(this@MainActivity, R.string.update_download_failed, Toast.LENGTH_LONG).show()
+                return@launch
+            }
+            if (!UpdateManager.install(this@MainActivity, dest)) {
+                Toast.makeText(this@MainActivity, R.string.update_install_blocked, Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    private fun versionDigits(tag: String): String = tag.trim().trimStart('v', 'V')
 
     private fun refreshPermissions() {
         permStatus(R.id.textPermMic, hasMicPermission())

@@ -96,6 +96,18 @@ Strictness: Strict (fewer accepts) / Balanced / Loose. It will reject most other
 voices but is **not** an authentication mechanism — a recording of you can pass. Keep it off
 for anything security-relevant; Android never allows voice-unlock anyway.
 
+## Automatic updates
+The app checks GitHub for a new release on every open (throttled to once per 30 minutes) and on
+demand via *Updates → Check for update*. Releases are signed APKs attached to GitHub Releases.
+When a newer version is found you get a prompt with the release notes; tap **Download and
+install**, and Android asks once to allow **Install unknown apps** for Partner — after that,
+every future update is one confirm each. No browser, no manual downloads.
+
+Releases are produced by CI automatically: bump `versionName` in `app/build.gradle.kts`,
+commit, push, then `git tag vX.Y && git push origin vX.Y` — CI signs with the repo-secret
+keystore and publishes the release. The signing keystore lives in `keystore/` (gitignored,
+see `keystore/CREDENTIALS.txt`) and as GitHub Actions secrets.
+
 ## Custom commands (presets)
 *Custom commands → Add*: type a phrase (e.g. `goodnight`), choose an action (Lock screen,
 Silent mode on, etc.), optional argument (contact/app name, minutes, percent). Custom

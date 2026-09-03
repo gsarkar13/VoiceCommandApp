@@ -92,6 +92,20 @@
 • Help\n\n
 Plus your custom commands from the list above.</string>
 
+    <string name="section_updates">Updates</string>
+    <string name="update_current_fmt">Current version: v%1$s</string>
+    <string name="update_checking">Checking for updates…</string>
+    <string name="update_up_to_date_fmt">Up to date (v%1$s)</string>
+    <string name="update_available_fmt">Update available: v%1$s (current v%2$s)</string>
+    <string name="update_check_failed">Update check failed — check your connection</string>
+    <string name="btn_check_update">Check for update</string>
+    <string name="update_download">Download and install</string>
+    <string name="update_later">Later</string>
+    <string name="update_downloading_fmt">Downloading update… %1$d%%</string>
+    <string name="update_download_failed">Download failed — try again</string>
+    <string name="update_install_blocked">Allow “Install unknown apps” for Partner when Android asks, then try again</string>
+    <string name="update_size_mb_fmt">Size: %1$d MB</string>
+
     <string name="ok">OK</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>

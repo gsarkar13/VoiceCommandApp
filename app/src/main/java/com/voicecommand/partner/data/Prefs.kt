@@ -14,6 +14,7 @@ object Prefs {
     private const val KEY_GATE_PROFILE = "gate_profile_json"
     private const val KEY_GATE_MULTIPLIER = "gate_multiplier"
     private const val KEY_LAST_STATUS = "last_status"
+    private const val KEY_LAST_UPDATE_CHECK = "last_update_check"
 
     private fun prefs(context: Context): SharedPreferences =
         context.applicationContext.getSharedPreferences(FILE, Context.MODE_PRIVATE)
@@ -71,5 +72,12 @@ object Prefs {
 
     fun setLastStatus(context: Context, value: String) {
         prefs(context).edit().putString(KEY_LAST_STATUS, value).apply()
+    }
+
+    fun lastUpdateCheck(context: Context): Long =
+        prefs(context).getLong(KEY_LAST_UPDATE_CHECK, 0L)
+
+    fun setLastUpdateCheck(context: Context, value: Long) {
+        prefs(context).edit().putLong(KEY_LAST_UPDATE_CHECK, value).apply()
     }
 }
