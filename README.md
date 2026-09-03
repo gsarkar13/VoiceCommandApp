@@ -127,6 +127,8 @@ phrases are matched before built-ins.
   HyperOS sometimes resets special access grants.
 - **After reboot nothing happens** → expected on Android 14+: open the app once (the boot
   notification offers this), listening resumes automatically.
+- **Command misheard** → the app replies “I heard: …” with the transcript; frequent mishears
+  (e.g. “look” for “lock”) are auto-corrected, and more can be added in `CommandParser.fixMishears`.
 - **Media keys ignored by some app** → `dispatchMediaKeyEvent` occasionally varies by ROM/app;
   test with a mainstream player first.
 

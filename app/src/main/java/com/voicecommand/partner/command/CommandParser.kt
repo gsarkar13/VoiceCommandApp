@@ -47,11 +47,26 @@ object CommandParser {
     private val numberRegex = Regex("(\\d{1,3})")
 
     fun parse(raw: String, customs: List<CustomCommand>): ParsedCommand {
-        val text = normalize(raw)
+        val text = fixMishears(normalize(raw))
         if (text.isEmpty()) return ParsedCommand(CommandType.UNKNOWN)
         val custom = customs.firstOrNull { normalize(it.phrase) == text }
         if (custom != null) return ParsedCommand(custom.type, custom.arg)
         return parseBuiltIn(text)
+    }
+
+    private val misheard = mapOf(
+        "look" to "lock", "lok" to "lock", "luck" to "lock", "loch" to "lock",
+        "scream" to "screen", "skrin" to "screen",
+        "flash light" to "flashlight",
+        "bettery" to "battery", "battry" to "battery",
+        "bolume" to "volume", "valume" to "volume",
+        "alaram" to "alarm", "timmer" to "timer"
+    )
+
+    private fun fixMishears(t: String): String {
+        var s = " $t "
+        misheard.forEach { (bad, good) -> s = s.replace(" $bad ", " $good ") }
+        return s.trim()
     }
 
     fun normalize(raw: String): String =

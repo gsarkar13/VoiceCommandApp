@@ -199,7 +199,7 @@ class WakeWordService : android.app.Service() {
                 return
             }
             Beeps.ack()
-            val text = withTimeoutOrNull(15000) { CommandEngine.recognize(app) }
+            val text = withTimeoutOrNull(25000) { CommandEngine.recognize(app) }
             if (text.isNullOrBlank()) {
                 Beeps.deny()
                 return

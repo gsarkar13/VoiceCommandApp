@@ -350,6 +350,8 @@ class CommandExecutor(private val context: Context) {
     private fun unknown(rawText: String, arg: String?) {
         if (arg == "unlock" || rawText.contains("unlock")) {
             Speaker.say(context, "Android security does not allow unlocking by voice.")
+        } else if (rawText.isNotBlank()) {
+            Speaker.say(context, "Sorry, I didn't catch that. I heard: $rawText. Say help for examples.")
         } else {
             Speaker.say(context, "Sorry, I didn't catch that. Say help for examples.")
         }

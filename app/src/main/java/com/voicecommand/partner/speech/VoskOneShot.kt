@@ -42,6 +42,7 @@ class VoskOneShot(private val model: Model) {
             val started = SystemClock.elapsedRealtime()
             var lastChange = started
             var lastPartial = ""
+            val collected = StringBuilder()
             val frame = ShortArray(2048)
             val bytes = ByteArray(frame.size * 2)
             while (true) {
@@ -56,21 +57,28 @@ class VoskOneShot(private val model: Model) {
                 }
                 if (rec.acceptWaveForm(bytes, offset)) {
                     val text = JSONObject(rec.finalResult).optString("text").trim()
-                    if (text.isNotEmpty()) return text
-                    lastChange = now
-                    lastPartial = ""
+                    if (text.isNotEmpty()) {
+                        if (collected.isNotEmpty()) collected.append(' ')
+                        collected.append(text)
+                        lastPartial = ""
+                        lastChange = now
+                    }
                 } else {
                     val partial = JSONObject(rec.partialResult).optString("partial").trim()
                     if (partial != lastPartial) {
                         lastPartial = partial
                         if (partial.isNotEmpty()) lastChange = now
                     }
-                    if (lastPartial.isNotEmpty() && now - lastChange >= silenceMs) {
-                        return lastPartial
-                    }
                 }
+                val combined = listOf(collected.toString().trim(), lastPartial)
+                    .filter { it.isNotEmpty() }
+                    .joinToString(" ")
+                if (combined.isNotEmpty() && now - lastChange >= silenceMs) return combined
             }
-            return lastPartial.ifEmpty { null }
+            val combined = listOf(collected.toString().trim(), lastPartial)
+                .filter { it.isNotEmpty() }
+                .joinToString(" ")
+            return combined.ifEmpty { null }
         } finally {
             try {
                 record.stop()

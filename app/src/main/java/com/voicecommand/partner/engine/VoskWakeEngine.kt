@@ -18,6 +18,7 @@ class VoskWakeEngine(
     }
     private val buffer = ByteArray(4096)
     private var recognizer: Recognizer? = null
+    private val history = ArrayDeque<String>()
 
     override val phraseIds: List<String> = phrases.map { it.first }.distinct()
 
@@ -39,16 +40,28 @@ class VoskWakeEngine(
             buffer[offset++] = (s.toInt() shr 8 and 0xFF).toByte()
         }
         return try {
-            val json = if (rec.acceptWaveForm(buffer, offset)) rec.finalResult else rec.partialResult
+            val isFinal = rec.acceptWaveForm(buffer, offset)
+            val json = if (isFinal) rec.finalResult else rec.partialResult
             val text = transcript(json) ?: return -1
-            val words = text.split(" ").filter { it.isNotBlank() }
+            val words = (history.joinToString(" ") + " " + text)
+                .split(" ")
+                .filter { it.isNotBlank() }
             if (words.size > 40) {
+                history.clear()
                 rec.reset()
                 return -1
             }
             val index = match(words)
-            if (index >= 0) rec.reset()
-            index
+            if (index >= 0) {
+                rec.reset()
+                history.clear()
+                return index
+            }
+            if (isFinal && text.isNotBlank()) {
+                history.addLast(text)
+                while (history.size > 2) history.removeFirst()
+            }
+            -1
         } catch (e: Exception) {
             -1
         }

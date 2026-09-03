@@ -100,7 +100,6 @@ object CommandEngine {
                         RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
                     )
                     putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en-US")
-                    putExtra(RecognizerIntent.EXTRA_PREFER_OFFLINE, true)
                     putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1)
                     putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, false)
                 }
