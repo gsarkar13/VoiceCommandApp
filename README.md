@@ -112,6 +112,10 @@ phrases are matched before built-ins.
   automatically uses Vosk — make sure the model is installed.
 - **“Call” opens the dialer instead of calling** → grant Phone permission.
 - **Lock says enable accessibility** → turn on the accessibility service (or device admin).
+- **“Do Not Disturb access” / “Write system settings” toggle missing** → these are Special app
+  access grants; on HyperOS you can also reach them via Settings → Apps → Partner → Other
+  permissions (“Do not disturb access”, “Modify system settings”). Re-check after app updates —
+  HyperOS sometimes resets special access grants.
 - **After reboot nothing happens** → expected on Android 14+: open the app once (the boot
   notification offers this), listening resumes automatically.
 - **Media keys ignored by some app** → `dispatchMediaKeyEvent` occasionally varies by ROM/app;

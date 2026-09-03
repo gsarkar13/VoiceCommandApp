@@ -99,9 +99,7 @@ class MainActivity : AppCompatActivity() {
             open(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
         }
         findViewById<View>(R.id.btnOpenAdmin).setOnClickListener { openDeviceAdmin() }
-        findViewById<View>(R.id.btnOpenDnd).setOnClickListener {
-            open(Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS))
-        }
+        findViewById<View>(R.id.btnOpenDnd).setOnClickListener { openDndSettings() }
         findViewById<View>(R.id.btnOpenWriteSettings).setOnClickListener {
             open(
                 Intent(
@@ -501,6 +499,18 @@ class MainActivity : AppCompatActivity() {
             .putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, admin)
             .putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION, getString(R.string.perm_admin))
         open(intent)
+    }
+
+    private fun openDndSettings() {
+        val direct = Intent(
+            Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS,
+            android.net.Uri.parse("package:$packageName")
+        ).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        try {
+            startActivity(direct)
+        } catch (e: Exception) {
+            open(Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS))
+        }
     }
 
     private fun open(intent: Intent) {
