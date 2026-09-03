@@ -2,7 +2,6 @@ package com.voicecommand.partner.speech
 
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -39,7 +38,7 @@ object CommandEngine {
         withContext(Dispatchers.Main.immediate) {
             if (!SpeechRecognizer.isRecognitionAvailable(context)) return@withContext null
             val hasOnDevice = Build.VERSION.SDK_INT >= 31 &&
-                context.packageManager.hasSystemFeature(PackageManager.FEATURE_ON_DEVICE_SPEECH_RECOGNITION)
+                SpeechRecognizer.isOnDeviceRecognitionAvailable(context)
             suspendCancellableCoroutine { cont ->
                 val sr = try {
                     if (hasOnDevice) {

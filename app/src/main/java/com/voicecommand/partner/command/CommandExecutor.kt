@@ -8,7 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.AudioManager
-import android.media.CameraManager
+import android.hardware.camera2.CameraManager
 import android.net.Uri
 import android.os.BatteryManager
 import android.os.Build
@@ -310,7 +310,7 @@ class CommandExecutor(private val context: Context) {
             Settings.System.putInt(
                 context.contentResolver,
                 Settings.System.SCREEN_BRIGHTNESS_MODE,
-                Settings.System.BRIGHTNESS_MODE_OFF
+                0
             )
             Settings.System.putInt(
                 context.contentResolver,

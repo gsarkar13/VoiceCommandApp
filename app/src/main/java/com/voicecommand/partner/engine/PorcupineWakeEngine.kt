@@ -33,8 +33,8 @@ class PorcupineWakeEngine private constructor(
             return try {
                 val porcupine = Porcupine.Builder()
                     .setAccessKey(accessKey.trim())
-                    .setKeywordPaths(keywords.map { it.second })
-                    .setSensitivities(List(keywords.size) { sensitivity })
+                    .setKeywordPaths(keywords.map { it.second }.toTypedArray())
+                    .setSensitivities(FloatArray(keywords.size) { sensitivity })
                     .build(context)
                 PorcupineWakeEngine(porcupine, keywords.map { it.first })
             } catch (e: Exception) {
