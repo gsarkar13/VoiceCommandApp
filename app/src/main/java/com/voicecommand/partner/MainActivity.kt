@@ -603,7 +603,12 @@ class MainActivity : AppCompatActivity() {
             return
         } catch (e: Exception) {
         }
-        open(Intent(Settings.ACTION_DEVICE_ADMIN_SETTINGS))
+        try {
+            startActivity(Intent("android.settings.DEVICE_ADMIN_SETTINGS"))
+            return
+        } catch (e: Exception) {
+        }
+        open(Intent(Settings.ACTION_SECURITY_SETTINGS))
     }
 
     private fun openDndSettings() {
