@@ -76,9 +76,13 @@ class VoskWakeEngine(
                 words.any { word -> word.contains(token) }
             }
             if (contained) return phraseIds.indexOf(m.id)
-            val tail = words.takeLast(m.tokens.size).joinToString(" ")
-            val maxDistance = if (m.tokens.size >= 2) 2 else 1
-            if (levenshtein(tail, m.text) <= maxDistance) return phraseIds.indexOf(m.id)
+            val n = m.tokens.size
+            val maxDistance = if (n >= 2) 2 else 1
+            val recent = words.takeLast(n + 2)
+            for (start in 0..recent.size - n) {
+                val window = recent.subList(start, start + n).joinToString(" ")
+                if (levenshtein(window, m.text) <= maxDistance) return phraseIds.indexOf(m.id)
+            }
         }
         return -1
     }

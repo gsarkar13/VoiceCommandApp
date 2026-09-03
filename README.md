@@ -32,8 +32,8 @@ on/off, all active phrases are detected simultaneously, and everything persists 
 ## Architecture (short version)
 
 - `WakeWordService` — foreground service (type `microphone`) owning a 16 kHz mic loop
-- **Porcupine** (Picovoice) — per-phrase `.ppn` keyword models, best battery/accuracy (optional)
-- **Vosk** — text-matching fallback for phrases without a `.ppn`, and offline command STT
+- **Vosk** — default wake engine: live text matching for every phrase (offline, no account)
+- **Porcupine** (Picovoice) — optional per-phrase `.ppn` keyword models, best battery/accuracy
 - Commands → Android `SpeechRecognizer` (Google) → automatic Vosk fallback when offline
 - Optional **voice gate**: enroll 3 samples of a wake phrase; MFCC+DTW filters other voices
   (convenience filter — **not security-grade**, see RESEARCH.md §5)
@@ -48,14 +48,14 @@ on/off, all active phrases are detected simultaneously, and everything persists 
 2. Enable USB debugging on the phone, plug in, press **Run**. Or build an APK
    (`Build → Build APKs`) and `adb install app-debug.apk`.
 
-### 2. Vosk model (enables out-of-the-box wake + offline commands)
+### 2. Vosk model (default engine — free, no account needed)
 On the phone, in the app: *Wake-word engines → **Download Vosk model (~40 MB)*** — one tap over
 Wi-Fi, downloaded from <https://alphacephei.com/vosk/models> and extracted automatically.
 Offline alternative: *Import model (.zip)* and pick `vosk-model-small-en-us-0.15.zip` with the
 file picker. The card then shows the installed model path. (Manual copy also works: put the
 extracted folder at `Android/data/com.voicecommand.partner/files/vosk-model/` via USB.)
 
-### 3. Porcupine (optional, recommended for battery + exotic phrases)
+### 3. Porcupine (optional — best battery + single-word phrases; needs free Picovoice account)
 1. Create a free account at <https://console.picovoice.ai> → copy your **AccessKey** →
    paste it in the app (*Wake-word engines*).
 2. For any wake phrase: *Porcupine Console → Train keyword* → type e.g. `Hey Partner`

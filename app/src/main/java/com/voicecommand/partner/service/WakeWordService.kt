@@ -131,9 +131,9 @@ class WakeWordService : android.app.Service() {
                 }
                 if (porcupineEngine == null && voskEngine == null) {
                     val reason = if (accessKey.isBlank() && VoskModelHolder.detectPath(app) == null) {
-                        "Set a Picovoice AccessKey or add a Vosk model in the app"
+                        "Download the Vosk model in Wake-word engines (no account needed)"
                     } else {
-                        "Engine init failed. Check the AccessKey in the app."
+                        "Engine init failed — check the Vosk model or AccessKey in the app"
                     }
                     setStatus(reason)
                     return@launch

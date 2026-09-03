@@ -18,10 +18,10 @@
     <string name="btn_stop">Stop listening</string>
 
     <string name="section_engine">Wake-word engines</string>
-    <string name="access_key_hint">Picovoice AccessKey (free console account, optional)</string>
+    <string name="access_key_hint">Picovoice AccessKey (optional — only for imported .ppn phrases)</string>
     <string name="vosk_path_hint">Vosk model folder (blank = auto-detect)</string>
     <string name="vosk_detected_fmt">Vosk model: %1$s</string>
-    <string name="vosk_not_detected">Vosk model not found — offline wake/command fallback disabled</string>
+    <string name="vosk_not_detected">Vosk model not found — download it below (free, no account needed)</string>
     <string name="btn_reload">Reload engines</string>
     <string name="btn_download_vosk">Download Vosk model (~40 MB)</string>
     <string name="btn_import_vosk">Import model (.zip)</string>
@@ -31,7 +31,7 @@
     <string name="vosk_install_failed">Vosk model install failed</string>
 
     <string name="section_phrases">Wake phrases</string>
-    <string name="phrases_hint">Add any phrase (e.g. Hey Partner, Hey Jervis, Hello Sir, Dost). Import a Porcupine .ppn file per phrase for best battery and accuracy; otherwise the phrase is matched from Vosk live transcription.</string>
+    <string name="phrases_hint">Add any phrase (e.g. Hey Partner, Hey Jervis, Hello Sir, Dost). Every phrase works out of the box via Vosk live transcription — prefer 2+ word phrases. Optionally import a Porcupine .ppn per phrase for best battery and accuracy.</string>
     <string name="btn_add_phrase">Add wake phrase</string>
     <string name="dialog_add_phrase_title">New wake phrase</string>
     <string name="phrase_label_hint">e.g. Hey Partner</string>
