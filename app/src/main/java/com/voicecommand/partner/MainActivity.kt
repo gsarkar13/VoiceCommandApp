@@ -595,10 +595,15 @@ class MainActivity : AppCompatActivity() {
 
     private fun openDeviceAdmin() {
         val admin = ComponentName(this, MyDeviceAdminReceiver::class.java)
-        val intent = Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN)
+        val add = Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN)
             .putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, admin)
             .putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION, getString(R.string.perm_admin))
-        open(intent)
+        try {
+            startActivity(add)
+            return
+        } catch (e: Exception) {
+        }
+        open(Intent(Settings.ACTION_DEVICE_ADMIN_SETTINGS))
     }
 
     private fun openDndSettings() {
